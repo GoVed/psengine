@@ -5,26 +5,29 @@
 	<link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
-	<div class="topnav" style="padding:10px;">
+	<div class="topnav">
 	<?php
 
 		
 		session_start();
 		$servername = "localhost";
-		$username = "root";
-		$password = "";
+		$username = "id15146908_root";
+		$password = "(v1h&dt7P73D8[@r";
 		$conn = new mysqli($servername, $username, $password);
-		$conn->select_db('pse');
+		$conn->select_db('id15146908_pse');
 
-		echo '<big>'.$_REQUEST["username"].'</big>';
+		echo '<span style="display:inline-block;margin:10px;"><big>'.$_REQUEST["username"].'</big></span>';
 		if(array_key_exists(("username"), $_SESSION)){	
 			if($_SESSION["username"]==$_REQUEST["username"]){
-				echo '<button style="float:right;" onclick="window.location=\'index.php?logout=true\'">Logout</button>';
+				echo '<a href="index.php?logout=true">Logout</a>';
 			}
 		}
+		echo '<a href="index.php">Home</a>';
 	?>
 	</div>
 	<?php
+		echo '<div style="padding-bottom:25px;">This is how I align elements, XD</div>';
+
 		$query=array();
 		if(array_key_exists("q", $_REQUEST)){
 			array_push($query, " where title like '%".$_REQUEST["q"]."%'");

@@ -1,4 +1,4 @@
-* {box-sizing: border-box;}
+
 
 body {
   margin: 0;
@@ -8,6 +8,9 @@ body {
 .topnav {
   overflow: hidden;
   background-color: #e9e9e9;
+  position: fixed;
+  width: 100%;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .profileButton{
@@ -109,12 +112,60 @@ body {
   display: flex;
 }
 .field-wrap input {
-  width: 100%;
-  flex-grow: 1;
+  width: 80%;
+  flex-grow: 0.8;
 }
 .marginElement{
-	width: 100%;
+  width: auto;
   padding-left:10px;
   padding-right:10px;
   margin-bottom: 10px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 1px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555555; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888888; 
+}
+
+.scrollmenu {
+  background-color: #E3E3E3;
+  border-radius:10px;
+  margin-top:5px;
+  overflow: auto;
+  white-space: nowrap; 
+  display:inline-block;
+  width:40%;
+   
+}
+
+.scrollData {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 7px;  
+  text-decoration: none;
+  cursor:pointer;
+  border-radius: 10px;
+}
+
+.scrollData:hover {
+  background-color: #AAAAAA; 
 }

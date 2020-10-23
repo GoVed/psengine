@@ -9,13 +9,13 @@
 		<?php	
 			session_start();		
 			$servername = "localhost";
-			$username = "root";
-			$password = "";
+			$username = "id15146908_root";
+			$password = "(v1h&dt7P73D8[@r";
 			$conn = new mysqli($servername, $username, $password);
-			if ($conn->select_db('pse') === false) {
-			    $conn->query("CREATE DATABASE pse");
+			if ($conn->select_db('id15146908_pse') === false) {
+			    $conn->query("CREATE DATABASE id15146908_pse");
 			}
-			$conn->select_db('pse');
+			$conn->select_db('id15146908_pse');
 			$res = mysqli_query($conn,"SHOW TABLES LIKE 'users'");
 			if($res->num_rows == 0){
 				$conn->query('create table users(email varchar(128) primary key,username varchar(128),password varchar(128));'); 
@@ -127,14 +127,24 @@
 			else{				
 				echo '<input placeholder="Query" type="text" name="search" id="query"> <button onclick="search()">	Search</button>';
 			}
+
+			
+
 			echo '</div>';
+			echo '<span class="scrollmenu" id="languageHint"></span>';
 			echo "&nbsp; <a href='newPost.php'>+ New</a>";
 			if(array_key_exists("username", $_SESSION)){
 				echo '<a class="profileButton" href="profile.php?username='.$_SESSION["username"].'">'.$_SESSION["username"].'</a>';
 			}
 			else{
 				echo "&nbsp; <a href='login.php'>Login / Signup</a>";
-			}			
+			}		
+			if(array_key_exists("q", $_REQUEST)||array_key_exists("l", $_REQUEST)){
+				echo "<a href='index.php'>Clear Search</a>";
+			}
+
+			
+	
 		?>
 		
 
@@ -144,6 +154,7 @@
 	
 	<div>
 		<?php
+			echo '<div style="padding-bottom:25px;">This is how I align elements, XD</div>';
 			if(array_key_exists("q", $_REQUEST)){
 				echo '<br>&nbsp; <a href="https://www.google.com/search?q='.$_REQUEST['q'].'">Google</a>&nbsp;';
 				echo '&nbsp; <a href="https://en.wikipedia.org/w/index.php?search='.$_REQUEST['q'].'">Wikipedia</a>';
@@ -151,71 +162,126 @@
 		?>
 		
 	</div>
-
-	<?php
-		$query="";
-		$rowsInPage=10;
-		if(array_key_exists("q", $_REQUEST)){
-		    $query=" where (title LIKE '%".$_REQUEST["q"]."%' OR description LIKE '%".$_REQUEST["q"]."%')";
-		}
-		
-		$result = mysqli_query($conn,"select count(1) FROM posts".$query." ORDER BY upvotes desc, id desc;");
-        $row = mysqli_fetch_assoc($result);
-        $total = $row['count(1)'];
-		
-		$page=0;
-	    if(array_key_exists("page", $_REQUEST)){
-	        $page=$_REQUEST["page"];   
-	    }
-		$res = mysqli_query($conn,"SELECT * FROM posts".$query." ORDER BY upvotes desc, id desc limit ".($page*$rowsInPage).",".(($page+1)*$rowsInPage).";");	
-		while ($row = mysqli_fetch_assoc($res)) { 
-			echo 
-			'<br><table class="data_root clickable" onclick="redirect(\'viewPost.php?id='.$row['id'].'\')">
-			<tr>
-				<td >'.$row['title'].'
-				<small> - '.$row['username'].'</small></td>
-				<td rowspan=2 style="width: 3%;">'.$row['upvotes'].' ⇅</td>
-			</tr>
-			<tr>
-				<td>Language : '.$row['language'].' - '.$row['syntax'].'</td>
-			</tr>
-			</table>';
-		}
-		
-		echo '<br><div style="width:80%;margin:auto;">';
-		if($page!=0){
-		    $out="index.php?";
-		    if(array_key_exists("q", $_REQUEST)){
-		        $out=$out."q=".$_REQUEST["q"]."&";   
-		    }
-		    $out=$out."page=".($page-1);
-		    echo '<button onclick="location.href=\''.$out.'\'">Previous page</button>';
-		}
-		
-		if((($page+1)*$rowsInPage)<$total){
-		    $out="index.php?";
-		    if(array_key_exists("q", $_REQUEST)){
-		        $out=$out."q=".$_REQUEST["q"]."&";   
-		    }
-		    $out=$out."page=".($page+1);
-		    echo '<button style="float:right;" onclick="location.href=\''.$out.'\'">Next page</button>';
-		}
-		echo '</div>';
-		
-	?>
+    <div>
+        <?php
+    		$query="";
+    		$rowsInPage=10;
+    		if(array_key_exists("q", $_REQUEST)&&array_key_exists("l", $_REQUEST)){
+    			$query=" where (title LIKE '%".$_REQUEST["q"]."%' OR description LIKE '%".$_REQUEST["q"]."%') and language LIKE '".$_REQUEST["l"]."'";
+    		}
+    		else{
+    			if(array_key_exists("q", $_REQUEST)){
+    			    $query=" where (title LIKE '%".$_REQUEST["q"]."%' OR description LIKE '%".$_REQUEST["q"]."%')";
+    			}
+    			if(array_key_exists("l", $_REQUEST)){
+    				$query=" where language LIKE '".$_REQUEST["l"]."'";			    
+    			}
+    		}
+    		
+    		
+    		$result = mysqli_query($conn,"select count(1) FROM posts".$query." ORDER BY upvotes desc, id desc;");
+            $row = mysqli_fetch_assoc($result);
+            $total = $row['count(1)'];
+    		
+    		$page=0;
+    	    if(array_key_exists("page", $_REQUEST)){
+    	        $page=$_REQUEST["page"];   
+    	    }
+    		$res = mysqli_query($conn,"SELECT * FROM posts".$query." ORDER BY upvotes desc, id desc limit ".($page*$rowsInPage).",".(($page+1)*$rowsInPage).";");	
+    		while ($row = mysqli_fetch_assoc($res)) { 
+    			echo 
+    			'<br><table class="data_root clickable" onclick="redirect(\'viewPost.php?id='.$row['id'].'\')">
+    			<tr>
+    				<td >'.$row['title'].'
+    				<small> - '.$row['username'].'</small></td>
+    				<td rowspan=2 style="width: 3%;">'.$row['upvotes'].' ⇅</td>
+    			</tr>
+    			<tr>
+    				<td>Language : '.$row['language'].' - '.$row['syntax'].'</td>
+    			</tr>
+    			</table>';
+    		}
+    		
+    		echo '<br><div style="width:80%;margin:auto;height:30px;">';
+    		if($page!=0){
+    		    $out="index.php?";
+    		    if(array_key_exists("q", $_REQUEST)){
+    		        $out=$out."q=".$_REQUEST["q"]."&";   
+    		    }
+    		    $out=$out."page=".($page-1);
+    		    echo '<button onclick="location.href=\''.$out.'\'">Previous page</button>';
+    		}
+    		
+    		if((($page+1)*$rowsInPage)<$total){
+    		    $out="index.php?";
+    		    if(array_key_exists("q", $_REQUEST)){
+    		        $out=$out."q=".$_REQUEST["q"]."&";   
+    		    }
+    		    $out=$out."page=".($page+1);
+    		    echo '<button style="float:right;" onclick="location.href=\''.$out.'\'">Next page</button>';
+    		}
+    		echo '</div><br>';
+    		
+    	?>
+    </div>
+	
 
 </body>
 <script type="text/javascript">
-	document.getElementById('query').onkeydown = function(e){
+	<?php
+		$res = mysqli_query($conn,"select distinct language FROM posts;");
+	    $languages=array();
+		
+		while ($row = mysqli_fetch_assoc($res)) { 
+			array_push($languages, "'".$row['language']."'");    			
+		}
+
+		echo 'var languages=['.join(",",$languages).'];';
+	?>
+
+	var queryLang=[];
+	const urlParams = new URLSearchParams(window.location.search);
+	updateHint();
+	document.getElementById('query').onkeyup = function(e){
 	   if(e.keyCode == 13){
 	     search();
 	   }
+	   updateHint();	  
 	};
+	function updateHint(){
+		queryLang=[];
+	   var query=document.getElementById("query").value;
+	   for(language in languages){	   	
+	   		if(languages[language].toLowerCase().startsWith(document.getElementById('query').value.toLowerCase())){
+	   			out="<span class='scrollData' onclick='redirect(\"index.php?";	   			
+	   			out+="l="+encodeURIComponent(languages[language])+"\")'>"+languages[language]+"</span>";
+	   			queryLang.push(out);
+	   		}
+	   }
+	   if(queryLang.length>0){
+	   	document.getElementById('languageHint').style.visibility='visible';
+	   	document.getElementById('languageHint').innerHTML=queryLang.join("&nbsp;");
+	   }	  
+	   else{
+	   	document.getElementById('languageHint').style.visibility='hidden';
+	   }
+	}
 	function search(){
+		out="?";
 		var query=document.getElementById("query").value;
 		
+		if(urlParams.get('l')!=null){
+			out+="l="+encodeURIComponent(urlParams.get('l'))+"&";
+		}
+
+		if(urlParams.get('page')!=null){
+			out+="page="+encodeURIComponent(urlParams.get('page'))+"&";
+		}
+
+		query=encodeURIComponent(query);
+		out+="q="+query;
 		if(query.length>0){
-			window.location="?q="+query;
+			window.location=out;
 		}
 	}
 	function redirect(path){
